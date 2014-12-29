@@ -50,6 +50,7 @@ import java.math.BigDecimal;
  * @author Peter Sinnott (psinnott@gmail.com)
  * @author Thomas Barrasso (tbarrasso@sevenplusandroid.org)
  * @author Alex Florescu (florescu@yahoo-inc.com)
+ * @author Michael Keppler (bananeweizen@gmx.de)
  */
 public class RangeSeekBar<T extends Number> extends ImageView {
 
@@ -638,7 +639,7 @@ public class RangeSeekBar<T extends Number> extends ImageView {
     @SuppressWarnings("unchecked")
     private T normalizedToValue(double normalized) {
         double v = absoluteMinValuePrim + normalized * (absoluteMaxValuePrim - absoluteMinValuePrim);
-        // TODO parametrise this rounding to allow variable decimal points
+        // TODO parameterize this rounding to allow variable decimal points
         return (T) numberType.toNumber(Math.round(v * 100) / 100d);
     }
 
@@ -704,7 +705,7 @@ public class RangeSeekBar<T extends Number> extends ImageView {
     ;
 
     /**
-     * Utility enumaration used to convert between Numbers and doubles.
+     * Utility enumeration used to convert between Numbers and doubles.
      *
      * @author Stephan Tittel (stephan.tittel@kom.tu-darmstadt.de)
      */
@@ -739,19 +740,19 @@ public class RangeSeekBar<T extends Number> extends ImageView {
         public Number toNumber(double value) {
             switch (this) {
                 case LONG:
-                    return new Long((long) value);
+                    return Long.valueOf((long) value);
                 case DOUBLE:
                     return value;
                 case INTEGER:
-                    return new Integer((int) value);
+                    return Integer.valueOf((int) value);
                 case FLOAT:
-                    return new Float(value);
+                    return Float.valueOf((float)value);
                 case SHORT:
-                    return new Short((short) value);
+                    return Short.valueOf((short) value);
                 case BYTE:
-                    return new Byte((byte) value);
+                    return Byte.valueOf((byte) value);
                 case BIG_DECIMAL:
-                    return new BigDecimal(value);
+                    return BigDecimal.valueOf(value);
             }
             throw new InstantiationError("can't convert " + this + " to a Number object");
         }
