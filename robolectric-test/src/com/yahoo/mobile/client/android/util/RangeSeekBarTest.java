@@ -19,7 +19,7 @@ public class RangeSeekBarTest {
         mSeekBar.setRangeValues(0L, 100L);
         long minValue = mSeekBar.getAbsoluteMinValue();
         Assert.assertEquals(0L, minValue);
-        long maxValue = mSeekBar.getAbsoluteMinValue();
+        long maxValue = mSeekBar.getAbsoluteMaxValue();
         Assert.assertEquals(100L, maxValue);
     }
 }
