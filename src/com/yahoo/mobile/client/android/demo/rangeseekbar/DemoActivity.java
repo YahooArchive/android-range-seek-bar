@@ -35,10 +35,11 @@ public class DemoActivity extends Activity {
         RangeSeekBar<Integer> rangeSeekBar = new RangeSeekBar<Integer>(this);
         // Set the range
         rangeSeekBar.setRangeValues(15, 90);
+        rangeSeekBar.setSelectedMinValue(20);
+        rangeSeekBar.setSelectedMaxValue(88);
 
         // Add to layout
         LinearLayout layout = (LinearLayout) findViewById(R.id.seekbar_placeholder);
         layout.addView(rangeSeekBar);
-
     }
 }

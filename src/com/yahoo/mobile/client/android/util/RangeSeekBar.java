@@ -54,8 +54,8 @@ import java.math.BigDecimal;
  */
 public class RangeSeekBar<T extends Number> extends ImageView {
 
-    public static final int DEFAULT_MINIMUM = 0;
-    public static final int DEFAULT_MAXIMUM = 100;
+    public static final Integer DEFAULT_MINIMUM = 0;
+    public static final Integer DEFAULT_MAXIMUM = 100;
     public static final int HEIGHT_IN_DP = 30;
     public static final int TEXT_LATERAL_PADDING_IN_DP = 3;
     private static final int INITIAL_PADDING_IN_DP = 8;
@@ -96,10 +96,6 @@ public class RangeSeekBar<T extends Number> extends ImageView {
 
     private int mActivePointerId = INVALID_POINTER_ID;
 
-    /**
-     * On touch, this offset plus the scaled value from the position of the touch will form the progress value. Usually 0.
-     */
-    float mTouchProgressOffset;
     private int mScaledTouchSlop;
 
     private boolean mIsDragging;
@@ -143,9 +139,9 @@ public class RangeSeekBar<T extends Number> extends ImageView {
         }
     }
 
-    private final void init(Context context, AttributeSet attrs) {
+    private void init(Context context, AttributeSet attrs) {
         if (attrs == null) {
-            setRangeValues(DEFAULT_MINIMUM, DEFAULT_MAXIMUM);
+            setRangeToDefaultValues();
         } else {
             TypedArray a = getContext().obtainStyledAttributes(attrs, R.styleable.RangeSeekBar, 0, 0);
             setRangeValues(
@@ -182,9 +178,11 @@ public class RangeSeekBar<T extends Number> extends ImageView {
         setValuePrimAndNumberType();
     }
 
-    public void setRangeValues(int minValue, int maxValue) {
-        this.absoluteMinValue = (T) Integer.valueOf(minValue);
-        this.absoluteMaxValue = (T) Integer.valueOf(maxValue);
+    @SuppressWarnings("unchecked")
+    // only used to set default values when initialised from XML without any values specified
+    private void setRangeToDefaultValues() {
+        this.absoluteMinValue = (T) DEFAULT_MINIMUM;
+        this.absoluteMaxValue = (T) DEFAULT_MAXIMUM;
         setValuePrimAndNumberType();
     }
 
@@ -192,12 +190,6 @@ public class RangeSeekBar<T extends Number> extends ImageView {
         absoluteMinValuePrim = absoluteMinValue.doubleValue();
         absoluteMaxValuePrim = absoluteMaxValue.doubleValue();
         numberType = NumberType.fromNumber(absoluteMinValue);
-    }
-
-    public void setRangeValues(double minValue, double maxValue) {
-        this.absoluteMinValue = (T) Double.valueOf(minValue);
-        this.absoluteMaxValue = (T) Double.valueOf(maxValue);
-        setValuePrimAndNumberType();
     }
 
     public void resetSelectedValues() {
@@ -615,7 +607,7 @@ public class RangeSeekBar<T extends Number> extends ImageView {
      *
      * @param value The new normalized min value to set.
      */
-    public void setNormalizedMinValue(double value) {
+    private void setNormalizedMinValue(double value) {
         normalizedMinValue = Math.max(0d, Math.min(1d, Math.min(value, normalizedMaxValue)));
         invalidate();
     }
@@ -625,7 +617,7 @@ public class RangeSeekBar<T extends Number> extends ImageView {
      *
      * @param value The new normalized max value to set.
      */
-    public void setNormalizedMaxValue(double value) {
+    private void setNormalizedMaxValue(double value) {
         normalizedMaxValue = Math.max(0d, Math.min(1d, Math.max(value, normalizedMinValue)));
         invalidate();
     }
