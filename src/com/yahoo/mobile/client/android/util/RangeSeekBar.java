@@ -139,9 +139,9 @@ public class RangeSeekBar<T extends Number> extends ImageView {
         }
     }
 
-    private final void init(Context context, AttributeSet attrs) {
+    private void init(Context context, AttributeSet attrs) {
         if (attrs == null) {
-            setRangeValues(DEFAULT_MINIMUM, DEFAULT_MAXIMUM);
+            setDefaultValues(DEFAULT_MINIMUM, DEFAULT_MAXIMUM);
         } else {
             TypedArray a = getContext().obtainStyledAttributes(attrs, R.styleable.RangeSeekBar, 0, 0);
             setRangeValues(
@@ -178,7 +178,9 @@ public class RangeSeekBar<T extends Number> extends ImageView {
         setValuePrimAndNumberType();
     }
 
-    public void setRangeValues(Integer minValue, Integer maxValue) {
+    @SuppressWarnings("unchecked")
+    // only used to set default values when initialised from XML without any values specified
+    private void setDefaultValues(int minValue, int maxValue) {
         this.absoluteMinValue = (T) Integer.valueOf(minValue);
         this.absoluteMaxValue = (T) Integer.valueOf(maxValue);
         setValuePrimAndNumberType();
@@ -605,7 +607,7 @@ public class RangeSeekBar<T extends Number> extends ImageView {
      *
      * @param value The new normalized min value to set.
      */
-    public void setNormalizedMinValue(double value) {
+    private void setNormalizedMinValue(double value) {
         normalizedMinValue = Math.max(0d, Math.min(1d, Math.min(value, normalizedMaxValue)));
         invalidate();
     }
@@ -615,7 +617,7 @@ public class RangeSeekBar<T extends Number> extends ImageView {
      *
      * @param value The new normalized max value to set.
      */
-    public void setNormalizedMaxValue(double value) {
+    private void setNormalizedMaxValue(double value) {
         normalizedMaxValue = Math.max(0d, Math.min(1d, Math.max(value, normalizedMinValue)));
         invalidate();
     }
