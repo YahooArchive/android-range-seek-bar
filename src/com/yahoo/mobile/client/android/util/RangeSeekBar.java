@@ -141,7 +141,7 @@ public class RangeSeekBar<T extends Number> extends ImageView {
 
     private void init(Context context, AttributeSet attrs) {
         if (attrs == null) {
-            setDefaultValues(DEFAULT_MINIMUM, DEFAULT_MAXIMUM);
+            setRangeToDefaultValues();
         } else {
             TypedArray a = getContext().obtainStyledAttributes(attrs, R.styleable.RangeSeekBar, 0, 0);
             setRangeValues(
@@ -180,9 +180,9 @@ public class RangeSeekBar<T extends Number> extends ImageView {
 
     @SuppressWarnings("unchecked")
     // only used to set default values when initialised from XML without any values specified
-    private void setDefaultValues(int minValue, int maxValue) {
-        this.absoluteMinValue = (T) Integer.valueOf(minValue);
-        this.absoluteMaxValue = (T) Integer.valueOf(maxValue);
+    private void setRangeToDefaultValues() {
+        this.absoluteMinValue = (T) DEFAULT_MINIMUM;
+        this.absoluteMaxValue = (T) DEFAULT_MAXIMUM;
         setValuePrimAndNumberType();
     }
 
