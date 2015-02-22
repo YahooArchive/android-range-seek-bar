@@ -28,12 +28,18 @@ You should be able to import and run like any other Android app.
 
 # How to use in your own project
 
-Copy the following into your own project:
-* [Java source files from src/com/yahoo/mobile/client/android/util](src/com/yahoo/mobile/client/android/util)
-* [Attributes for XML use](res/values/attrs.xml)
-* [Image files from res/drawable-xhdpi](res/drawable-xhdpi) (or use your own): [seek_thumb_disabled.png](res/drawable-xhdpi/seek_thumb_disabled.png), [seek_thumb_normal.png](res/drawable-xhdpi/seek_thumb_normal.png), [seek_thumb_pressed.png](res/drawable-xhdpi/seek_thumb_pressed.png)
+## Setup with Gradle library module
 
-Then you can use this in your layouts, either programmatically instantiating like in [DemoActivity](src/com/yahoo/mobile/client/android/demo/rangeseekbar/DemoActivity.java) or through XML, like in [main.xml](res/layout/main.xml)
+* Instructions coming soon
+
+## Copy/paste relevant files
+
+Copy the following into your own project:
+* [Java source files from src/com/yahoo/mobile/client/android/util](rangeseekbar/src/main/java/com/yahoo/mobile/client/android/util)
+* [Attributes for XML use](rangeseekbar/src/main/res/values/attrs.xml)
+* [Image files from res/drawable-xhdpi](rangeseekbar/src/main/res/drawable-xhdpi) (or use your own): [seek_thumb_disabled.png](rangeseekbar/src/main/res/drawable-xhdpi/seek_thumb_disabled.png), [seek_thumb_normal.png](rangeseekbar/src/main/res/drawable-xhdpi/seek_thumb_normal.png), [seek_thumb_pressed.png](rangeseekbar/src/main/res/drawable-xhdpi/seek_thumb_pressed.png)
+
+Then you can use this in your layouts, either programmatically instantiating like in [DemoActivity](rangeseekbar-sample/src/main/java/com/yahoo/mobile/client/android/demo/DemoActivity.java) or through XML, like in [main.xml](rangeseekbar-sample/src/main/res/layout/main.xml)
 
 
 # License
