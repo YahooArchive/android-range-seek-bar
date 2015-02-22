@@ -1,0 +1,10 @@
+language: android
+jdk: oraclejdk7
+
+android:
+  components:
+    - build-tools-20.0.0
+    - android-21
+
+script:
+    - ./gradlew clean assembleDebug test
