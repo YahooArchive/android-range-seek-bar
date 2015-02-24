@@ -28,6 +28,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    android.sourceSets.test.java.srcDirs += "build/generated/source/r/debug"
 }
 
 dependencies {
