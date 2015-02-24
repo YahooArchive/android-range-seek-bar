@@ -1,5 +1,7 @@
 range-seek-bar
 ======================
+![](https://travis-ci.org/yahoo/android-range-seek-bar.svg?branch=master)
+======================
 
 # Introduction
 
