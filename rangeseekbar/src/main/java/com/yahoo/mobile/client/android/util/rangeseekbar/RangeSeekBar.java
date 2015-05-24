@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package com.yahoo.mobile.client.android.util;
+package com.yahoo.mobile.client.android.util.rangeseekbar;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -27,23 +27,18 @@ import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.ViewConfiguration;
 import android.widget.ImageView;
+
+import com.yahoo.mobile.client.android.util.PixelUtil;
+
 import java.math.BigDecimal;
 
 /**
  * Widget that lets users select a minimum and maximum value on a given numerical range.
- * The range value types can be one of Long, Double, Integer, Float, Short, Byte or BigDecimal.<br />
- * <br />
+ * The range value types can be one of Long, Double, Integer, Float, Short, Byte or BigDecimal.<br>
+ * <br>
  * Improved {@link android.view.MotionEvent} handling for smoother use, anti-aliased painting for improved aesthetics.
  *
  * @param <T> The Number type of the range values. One of Long, Double, Integer, Float, Short, Byte or BigDecimal.
- *            <p/>
- *            <p/>
- *            <p/>
- *            https://code.google.com/p/range-seek-bar/
- *            <p/>
- *            Apache License
- *            <p/>
- *            <p/>
  * @author Stephan Tittel (stephan.tittel@kom.tu-darmstadt.de)
  * @author Peter Sinnott (psinnott@gmail.com)
  * @author Thomas Barrasso (tbarrasso@sevenplusandroid.org)
@@ -78,7 +73,7 @@ public class RangeSeekBar<T extends Number> extends ImageView {
     private boolean notifyWhileDragging = false;
     private OnRangeSeekBarChangeListener<T> listener;
     /**
-     * Default color of a {@link com.yahoo.mobile.client.android.util.RangeSeekBar}, #FF33B5E5. This is also known as "Ice Cream Sandwich" blue.
+     * Default color of a {@link RangeSeekBar}, #FF33B5E5. This is also known as "Ice Cream Sandwich" blue.
      */
     public static final int DEFAULT_COLOR = Color.argb(0xFF, 0x33, 0xB5, 0xE5);
     /**

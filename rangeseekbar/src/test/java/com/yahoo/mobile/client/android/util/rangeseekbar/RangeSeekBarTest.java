@@ -1,5 +1,4 @@
-package com.yahoo.mobile.client.android.util;
-
+package com.yahoo.mobile.client.android.util.rangeseekbar;
 
 import org.junit.Assert;
 import org.junit.Test;
