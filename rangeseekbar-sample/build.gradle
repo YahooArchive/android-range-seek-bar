@@ -1,4 +1,9 @@
 apply plugin: 'com.android.application'
+repositories {
+    maven {
+        url "https://oss.sonatype.org/content/repositories/snapshots"
+    }
+}
 
 android {
     compileSdkVersion 21
@@ -22,5 +27,5 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:appcompat-v7:21.0.0'
-    compile project(':rangeseekbar')
+    compile 'com.yahoo.mobile.client.android.util.rangeseekbar:rangeseekbar-library:0.1.0-SNAPSHOT'
 }

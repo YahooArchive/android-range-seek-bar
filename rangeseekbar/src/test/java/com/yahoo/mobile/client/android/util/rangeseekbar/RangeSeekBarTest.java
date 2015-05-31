@@ -1,20 +1,19 @@
-package com.yahoo.mobile.client.android.util;
-
+package com.yahoo.mobile.client.android.util.rangeseekbar;
 
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.robolectric.Robolectric;
-import org.robolectric.RobolectricTestRunner;
+import org.robolectric.RobolectricGradleTestRunner;
+import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
-@Config(emulateSdk = 18)
-@RunWith(RobolectricTestRunner.class)
+@RunWith(RobolectricGradleTestRunner.class)
+@Config(constants = BuildConfig.class, sdk = 21)
 public class RangeSeekBarTest {
 
     @Test
     public void rsb_should_handle_long_values() {
-        RangeSeekBar<Long> mSeekBar = new RangeSeekBar<Long>(Robolectric.application);
+        RangeSeekBar<Long> mSeekBar = new RangeSeekBar<>(RuntimeEnvironment.application);
         // Set up the seek bar
         mSeekBar.setRangeValues(0L, 100L);
         long minValue = mSeekBar.getAbsoluteMinValue();
@@ -22,4 +21,5 @@ public class RangeSeekBarTest {
         long maxValue = mSeekBar.getAbsoluteMaxValue();
         Assert.assertEquals(100L, maxValue);
     }
+
 }

@@ -19,7 +19,7 @@ package com.yahoo.mobile.client.android.demo;
 import android.app.Activity;
 import android.os.Bundle;
 import android.widget.LinearLayout;
-import com.yahoo.mobile.client.android.util.RangeSeekBar;
+import com.yahoo.mobile.client.android.util.rangeseekbar.RangeSeekBar;
 
 public class DemoActivity extends Activity {
 

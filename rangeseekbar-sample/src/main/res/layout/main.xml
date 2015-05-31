@@ -24,7 +24,8 @@
             android:text="Range seek bar from xml with default range"
             />
 
-    <com.yahoo.mobile.client.android.util.RangeSeekBar android:layout_width="fill_parent"
+    <com.yahoo.mobile.client.android.util.rangeseekbar.RangeSeekBar
+        android:layout_width="fill_parent"
                                                        android:layout_height="wrap_content"/>
 
     <TextView
@@ -33,7 +34,8 @@
             android:text="Range seek bar from xml with ranges set"
             />
 
-    <com.yahoo.mobile.client.android.util.RangeSeekBar android:layout_width="fill_parent"
+    <com.yahoo.mobile.client.android.util.rangeseekbar.RangeSeekBar
+        android:layout_width="fill_parent"
                                                        android:layout_height="wrap_content"
                                                        rsb:absoluteMinValue="20"
                                                        rsb:absoluteMaxValue="150"
@@ -45,7 +47,8 @@
             android:text="Range seek bar from xml with ranges set and double values"
             />
 
-    <com.yahoo.mobile.client.android.util.RangeSeekBar android:layout_width="fill_parent"
+    <com.yahoo.mobile.client.android.util.rangeseekbar.RangeSeekBar
+        android:layout_width="fill_parent"
                                                        android:layout_height="wrap_content"
                                                        rsb:absoluteMinValue="15.23"
                                                        rsb:absoluteMaxValue="140.54"
@@ -57,7 +60,8 @@
             android:text="Range seek bar from xml with single thumb to true"
             />
 
-    <com.yahoo.mobile.client.android.util.RangeSeekBar android:layout_width="fill_parent"
+    <com.yahoo.mobile.client.android.util.rangeseekbar.RangeSeekBar
+        android:layout_width="fill_parent"
                                                        android:layout_height="wrap_content"
                                                        rsb:absoluteMinValue="20"
                                                        rsb:absoluteMaxValue="150"
