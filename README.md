@@ -32,7 +32,7 @@ You should be able to import and run like any other Android app.
 
 * Add this in your build.gradle file:
 
-** For latest release: 
+ * For latest release: 
 
 ```groovy
 	dependencies {
@@ -40,7 +40,7 @@ You should be able to import and run like any other Android app.
 	}
 ```
 
-** For the latest work-in-progress snapshot:
+ * For the latest work-in-progress snapshot:
 
 ```groovy
 	dependencies {
