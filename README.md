@@ -1,7 +1,5 @@
 range-seek-bar
 ======================
-![](https://travis-ci.org/yahoo/android-range-seek-bar.svg?branch=master)
-======================
 
 # Introduction
 
@@ -30,9 +28,25 @@ You should be able to import and run like any other Android app.
 
 # How to use in your own project
 
-## Setup with Gradle library module
+## Setup as Gradle dependency
 
-* Instructions coming soon
+* Add this in your build.gradle file:
+
+** For latest release: 
+
+```groovy
+	dependencies {
+    	compile 'com.yahoo.mobile.client.android.util.rangeseekbar:rangeseekbar-library:0.1.0'
+	}
+```
+
+** For the latest work-in-progress snapshot:
+
+```groovy
+	dependencies {
+    	compile 'com.yahoo.mobile.client.android.util.rangeseekbar:rangeseekbar-library:0.2.0-SNAPSHOT'
+	}
+```
 
 ## Copy/paste relevant files
 
