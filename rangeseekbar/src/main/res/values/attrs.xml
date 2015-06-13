@@ -14,10 +14,7 @@
         <!-- show the labels on the right and left-->
         <attr name="showLabels"         format="boolean"/>
 
-        <!-- always highlight the selected range (even for default values) the default is false -->
-        <attr name="alwaysHighlight"         format="boolean"/>
-
-        <!-- alwaysActive will make the buttons and bar always draw as the activeColor-->
+        <!-- alwaysActive will make the buttons and bar always draw as the activeColor (the default is false) -->
         <attr name="alwaysActive"       format="boolean"/>
 
         <!-- padding on either side on the slider -->
@@ -31,6 +28,11 @@
 
         <!-- the color of the bar that is selected -->
         <attr name="activeColor"        format="color"/>
+
+        <!-- set drawables for thumb handles -->
+        <attr name="thumbNormal"        format="reference"/>
+        <attr name="thumbPressed"       format="reference"/>
+        <attr name="thumbDisabled"      format="reference"/>
     </declare-styleable>
 
 </resources>
