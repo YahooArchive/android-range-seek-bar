@@ -68,5 +68,21 @@
                                                        rsb:singleThumb="true"
             />
 
+    <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="Range seek bar from xml with custom thumb handle"
+            />
+
+    <com.yahoo.mobile.client.android.util.rangeseekbar.RangeSeekBar
+        android:layout_width="fill_parent"
+                                                       android:layout_height="wrap_content"
+                                                       rsb:absoluteMinValue="20"
+                                                       rsb:absoluteMaxValue="150"
+        rsb:thumbNormal="@mipmap/ic_launcher"
+        rsb:thumbPressed="@mipmap/ic_launcher"
+        rsb:thumbDisabled="@mipmap/ic_launcher"
+            />
+
 </LinearLayout>
 

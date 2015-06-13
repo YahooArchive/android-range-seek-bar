@@ -25,6 +25,8 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Style;
 import android.graphics.RectF;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.util.AttributeSet;
@@ -145,7 +147,7 @@ public class RangeSeekBar<T extends Number> extends ImageView {
     }
 
     private void init(Context context, AttributeSet attrs) {
-        float lineHeight;
+        float barHeight;
         int thumbNormal = R.drawable.seek_thumb_normal;
         int thumbPressed = R.drawable.seek_thumb_pressed;
         int thumbDisabled = R.drawable.seek_thumb_disabled;
@@ -153,7 +155,7 @@ public class RangeSeekBar<T extends Number> extends ImageView {
         if (attrs == null) {
             setRangeToDefaultValues();
             mInternalPad    = PixelUtil.dpToPx(context, INITIAL_PADDING_IN_DP);
-            lineHeight      = PixelUtil.dpToPx(context, LINE_HEIGHT_IN_DP);
+            barHeight       = PixelUtil.dpToPx(context, LINE_HEIGHT_IN_DP);
             mActiveColor    = ACTIVE_COLOR;
             mDefaultColor   = Color.GRAY;
             mAlwaysActive   = false;
@@ -162,32 +164,41 @@ public class RangeSeekBar<T extends Number> extends ImageView {
             try {
                 setRangeValues(
                         extractNumericValueFromAttributes(a, R.styleable.RangeSeekBar_absoluteMinValue, DEFAULT_MINIMUM),
-                        extractNumericValueFromAttributes(a, R.styleable.RangeSeekBar_absoluteMaxValue, DEFAULT_MAXIMUM));
+                        extractNumericValueFromAttributes(a, R.styleable.RangeSeekBar_absoluteMaxValue, DEFAULT_MAXIMUM)
+                );
                 mSingleThumb    = a.getBoolean(R.styleable.RangeSeekBar_singleThumb, false);
                 mShowLabels     = a.getBoolean(R.styleable.RangeSeekBar_showLabels, true);
                 mInternalPad    = a.getDimensionPixelSize(R.styleable.RangeSeekBar_internalPadding, INITIAL_PADDING_IN_DP);
-                lineHeight      = a.getDimensionPixelSize(R.styleable.RangeSeekBar_barHeight, LINE_HEIGHT_IN_DP);
+                barHeight       = a.getDimensionPixelSize(R.styleable.RangeSeekBar_barHeight, LINE_HEIGHT_IN_DP);
                 mActiveColor    = a.getColor(R.styleable.RangeSeekBar_activeColor, ACTIVE_COLOR);
                 mDefaultColor   = a.getColor(R.styleable.RangeSeekBar_defaultColor, Color.GRAY);
                 mAlwaysActive   = a.getBoolean(R.styleable.RangeSeekBar_alwaysActive, false);
-                TypedValue value = new TypedValue();
-                if(a.getValue( R.styleable.RangeSeekBar_thumbNormal, value )) {
-                    thumbNormal = value.resourceId;
+                Drawable normalDrawable = a.getDrawable(R.styleable.RangeSeekBar_thumbNormal);
+                if (normalDrawable != null) {
+                    thumbImage = drawableToBitmap(normalDrawable);
                 }
-                if(a.getValue( R.styleable.RangeSeekBar_thumbPressed, value )) {
-                    thumbPressed = value.resourceId;
+                Drawable disabledDrawable = a.getDrawable(R.styleable.RangeSeekBar_thumbDisabled);
+                if (disabledDrawable != null) {
+                    thumbDisabledImage = drawableToBitmap(disabledDrawable);
                 }
-                if(a.getValue( R.styleable.RangeSeekBar_thumbDisabled, value )) {
-                    thumbDisabled = value.resourceId;
+                Drawable pressedDrawable = a.getDrawable(R.styleable.RangeSeekBar_thumbPressed);
+                if (pressedDrawable != null) {
+                    thumbPressedImage = drawableToBitmap(pressedDrawable);
                 }
             } finally {
                 a.recycle();
             }
         }
 
-        thumbImage          = BitmapFactory.decodeResource(getResources(), thumbNormal);
-        thumbPressedImage   = BitmapFactory.decodeResource(getResources(), thumbPressed);
-        thumbDisabledImage  = BitmapFactory.decodeResource(getResources(), thumbDisabled);
+        if (thumbImage == null) {
+            thumbImage = BitmapFactory.decodeResource(getResources(), thumbNormal);
+        }
+        if (thumbPressedImage == null) {
+            thumbPressedImage = BitmapFactory.decodeResource(getResources(), thumbPressed);
+        }
+        if (thumbDisabledImage == null) {
+            thumbDisabledImage = BitmapFactory.decodeResource(getResources(), thumbDisabled);
+        }
 
         mThumbWidth = thumbImage.getWidth();
         mThumbHalfWidth = 0.5f * mThumbWidth;
@@ -201,9 +212,9 @@ public class RangeSeekBar<T extends Number> extends ImageView {
                                                         DEFAULT_TEXT_DISTANCE_TO_BUTTON_IN_DP) + this.mDistanceToTop;
 
         mRect = new RectF(padding,
-                          mTextOffset + mThumbHalfHeight - lineHeight / 2,
+                          mTextOffset + mThumbHalfHeight - barHeight / 2,
                           getWidth() - padding,
-                          mTextOffset + mThumbHalfHeight + lineHeight / 2);
+                          mTextOffset + mThumbHalfHeight + barHeight / 2);
 
         // make RangeSeekBar focusable. This solves focus handling issues in case EditText widgets are being used along with the RangeSeekBar within ScollViews.
         setFocusable(true);
@@ -520,7 +531,7 @@ public class RangeSeekBar<T extends Number> extends ImageView {
         boolean selectedValuesAreDefault = (getSelectedMinValue().equals(getAbsoluteMinValue()) &&
                 getSelectedMaxValue().equals(getAbsoluteMaxValue()));
 
-        int colorToUseForButtonsAndHighlightedLine = mAlwaysActive || selectedValuesAreDefault ?
+        int colorToUseForButtonsAndHighlightedLine = !mAlwaysActive && selectedValuesAreDefault ?
                 mDefaultColor : // default values
                 mActiveColor;   // non default, filter is active
 
@@ -716,6 +727,29 @@ public class RangeSeekBar<T extends Number> extends ImageView {
             double result = (screenCoord - padding) / (width - 2 * padding);
             return Math.min(1d, Math.max(0d, result));
         }
+    }
+
+    public static Bitmap drawableToBitmap(Drawable drawable) {
+        if (drawable instanceof BitmapDrawable) {
+            return ((BitmapDrawable) drawable).getBitmap();
+        }
+
+        // We ask for the bounds if they have been set as they would be most
+        // correct, then we check we are  > 0
+        final int width = !drawable.getBounds().isEmpty() ?
+                drawable.getBounds().width() : drawable.getIntrinsicWidth();
+
+        final int height = !drawable.getBounds().isEmpty() ?
+                drawable.getBounds().height() : drawable.getIntrinsicHeight();
+
+        // Now we check we are > 0
+        final Bitmap bitmap = Bitmap.createBitmap(width <= 0 ? 1 : width, height <= 0 ? 1 : height,
+                Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+        drawable.draw(canvas);
+
+        return bitmap;
     }
 
     /**
