@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <declare-styleable name="RangeSeekBar">
-        <attr name="absoluteMinValue" format="integer|float"/>
-        <attr name="absoluteMaxValue" format="integer|float"/>
-        <attr name="singleThumb" format="boolean"/>
-        <attr name="showLabels" format="boolean"/>
+        <attr name="absoluteMinValue"   format="integer|float"/>
+        <attr name="absoluteMaxValue"   format="integer|float"/>
+        <attr name="singleThumb"        format="boolean"/>
+        <attr name="showLabels"         format="boolean"/>
+        <attr name="internalPadding"    format="integer|reference"/>
+        <attr name="barHeight"          format="integer|reference"/>
     </declare-styleable>
 
 </resources>

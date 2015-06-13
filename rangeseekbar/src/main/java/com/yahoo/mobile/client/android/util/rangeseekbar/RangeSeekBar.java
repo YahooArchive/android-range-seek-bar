@@ -139,28 +139,30 @@ public class RangeSeekBar<T extends Number> extends ImageView {
     }
 
     private void init(Context context, AttributeSet attrs) {
+        float lineHeight;
         if (attrs == null) {
             setRangeToDefaultValues();
+            INITIAL_PADDING = PixelUtil.dpToPx(context, INITIAL_PADDING_IN_DP);
+            lineHeight = PixelUtil.dpToPx(context, LINE_HEIGHT_IN_DP);
         } else {
             TypedArray a = getContext().obtainStyledAttributes(attrs, R.styleable.RangeSeekBar, 0, 0);
             setRangeValues(
                     extractNumericValueFromAttributes(a, R.styleable.RangeSeekBar_absoluteMinValue, DEFAULT_MINIMUM),
                     extractNumericValueFromAttributes(a, R.styleable.RangeSeekBar_absoluteMaxValue, DEFAULT_MAXIMUM));
-            mSingleThumb = a.getBoolean(R.styleable.RangeSeekBar_singleThumb, false);
-            mShowLabels = a.getBoolean(R.styleable.RangeSeekBar_showLabels, true);
+            mSingleThumb    = a.getBoolean(R.styleable.RangeSeekBar_singleThumb, false);
+            mShowLabels     = a.getBoolean(R.styleable.RangeSeekBar_showLabels, true);
+            INITIAL_PADDING = PixelUtil.dpToPx(context, a.getInt(R.styleable.RangeSeekBar_internalPadding, INITIAL_PADDING_IN_DP));
+            lineHeight      = PixelUtil.dpToPx(context, a.getInt(R.styleable.RangeSeekBar_barHeight, LINE_HEIGHT_IN_DP));
             a.recycle();
         }
 
         setValuePrimAndNumberType();
-
-        INITIAL_PADDING = PixelUtil.dpToPx(context, INITIAL_PADDING_IN_DP);
 
         mTextSize = PixelUtil.dpToPx(context, DEFAULT_TEXT_SIZE_IN_DP);
         mDistanceToTop = PixelUtil.dpToPx(context, DEFAULT_TEXT_DISTANCE_TO_TOP_IN_DP);
         mTextOffset = this.mTextSize + PixelUtil.dpToPx(context,
                                                         DEFAULT_TEXT_DISTANCE_TO_BUTTON_IN_DP) + this.mDistanceToTop;
 
-        float lineHeight = PixelUtil.dpToPx(context, LINE_HEIGHT_IN_DP);
         mRect = new RectF(padding,
                           mTextOffset + thumbHalfHeight - lineHeight / 2,
                           getWidth() - padding,
