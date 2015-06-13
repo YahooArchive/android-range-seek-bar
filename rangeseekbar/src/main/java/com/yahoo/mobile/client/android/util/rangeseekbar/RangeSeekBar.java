@@ -51,12 +51,29 @@ import java.math.BigDecimal;
  * @author Michael Keppler (bananeweizen@gmx.de)
  */
 public class RangeSeekBar<T extends Number> extends ImageView {
+    /**
+     * Default color of a {@link RangeSeekBar}, #FF33B5E5. This is also known as "Ice Cream Sandwich" blue.
+     */
+    public static final int ACTIVE_COLOR = Color.argb(0xFF, 0x33, 0xB5, 0xE5);
+    /**
+     * An invalid pointer id.
+     */
+    public static final int INVALID_POINTER_ID = 255;
+
+    // Localized constants from MotionEvent for compatibility
+    // with API < 8 "Froyo".
+    public static final int ACTION_POINTER_UP = 0x6, ACTION_POINTER_INDEX_MASK = 0x0000ff00, ACTION_POINTER_INDEX_SHIFT = 8;
 
     public static final Integer DEFAULT_MINIMUM = 0;
     public static final Integer DEFAULT_MAXIMUM = 100;
     public static final int HEIGHT_IN_DP = 30;
     public static final int TEXT_LATERAL_PADDING_IN_DP = 3;
+
     private static final int INITIAL_PADDING_IN_DP = 8;
+    private static final int DEFAULT_TEXT_SIZE_IN_DP = 14;
+    private static final int DEFAULT_TEXT_DISTANCE_TO_BUTTON_IN_DP = 8;
+    private static final int DEFAULT_TEXT_DISTANCE_TO_TOP_IN_DP = 8;
+
     private final int LINE_HEIGHT_IN_DP = 1;
     private final Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
     private final Bitmap thumbImage = BitmapFactory.decodeResource(getResources(), R.drawable.seek_thumb_normal);
@@ -67,7 +84,6 @@ public class RangeSeekBar<T extends Number> extends ImageView {
     private final float thumbWidth = thumbImage.getWidth();
     private final float thumbHalfWidth = 0.5f * thumbWidth;
     private final float thumbHalfHeight = 0.5f * thumbImage.getHeight();
-    private float INITIAL_PADDING;
     private float padding;
     private T absoluteMinValue, absoluteMaxValue;
     private NumberType numberType;
@@ -77,18 +93,6 @@ public class RangeSeekBar<T extends Number> extends ImageView {
     private Thumb pressedThumb = null;
     private boolean notifyWhileDragging = false;
     private OnRangeSeekBarChangeListener<T> listener;
-    /**
-     * Default color of a {@link RangeSeekBar}, #FF33B5E5. This is also known as "Ice Cream Sandwich" blue.
-     */
-    public static final int DEFAULT_COLOR = Color.argb(0xFF, 0x33, 0xB5, 0xE5);
-    /**
-     * An invalid pointer id.
-     */
-    public static final int INVALID_POINTER_ID = 255;
-
-    // Localized constants from MotionEvent for compatibility
-    // with API < 8 "Froyo".
-    public static final int ACTION_POINTER_UP = 0x6, ACTION_POINTER_INDEX_MASK = 0x0000ff00, ACTION_POINTER_INDEX_SHIFT = 8;
 
     private float mDownMotionX;
 
@@ -103,11 +107,12 @@ public class RangeSeekBar<T extends Number> extends ImageView {
     private int mDistanceToTop;
     private RectF mRect;
 
-    private static final int DEFAULT_TEXT_SIZE_IN_DP = 14;
-    private static final int DEFAULT_TEXT_DISTANCE_TO_BUTTON_IN_DP = 8;
-    private static final int DEFAULT_TEXT_DISTANCE_TO_TOP_IN_DP = 8;
     private boolean mSingleThumb;
+    private boolean mAlwaysActive;
     private boolean mShowLabels;
+    private float mInternalPad;
+    private int mActiveColor;
+    private int mDefaultColor;
 
     public RangeSeekBar(Context context) {
         super(context);
@@ -142,18 +147,27 @@ public class RangeSeekBar<T extends Number> extends ImageView {
         float lineHeight;
         if (attrs == null) {
             setRangeToDefaultValues();
-            INITIAL_PADDING = PixelUtil.dpToPx(context, INITIAL_PADDING_IN_DP);
-            lineHeight = PixelUtil.dpToPx(context, LINE_HEIGHT_IN_DP);
+            mInternalPad    = PixelUtil.dpToPx(context, INITIAL_PADDING_IN_DP);
+            lineHeight      = PixelUtil.dpToPx(context, LINE_HEIGHT_IN_DP);
+            mActiveColor    = ACTIVE_COLOR;
+            mDefaultColor   = Color.GRAY;
+            mAlwaysActive   = false;
         } else {
             TypedArray a = getContext().obtainStyledAttributes(attrs, R.styleable.RangeSeekBar, 0, 0);
-            setRangeValues(
-                    extractNumericValueFromAttributes(a, R.styleable.RangeSeekBar_absoluteMinValue, DEFAULT_MINIMUM),
-                    extractNumericValueFromAttributes(a, R.styleable.RangeSeekBar_absoluteMaxValue, DEFAULT_MAXIMUM));
-            mSingleThumb    = a.getBoolean(R.styleable.RangeSeekBar_singleThumb, false);
-            mShowLabels     = a.getBoolean(R.styleable.RangeSeekBar_showLabels, true);
-            INITIAL_PADDING = PixelUtil.dpToPx(context, a.getInt(R.styleable.RangeSeekBar_internalPadding, INITIAL_PADDING_IN_DP));
-            lineHeight      = PixelUtil.dpToPx(context, a.getInt(R.styleable.RangeSeekBar_barHeight, LINE_HEIGHT_IN_DP));
-            a.recycle();
+            try {
+                setRangeValues(
+                        extractNumericValueFromAttributes(a, R.styleable.RangeSeekBar_absoluteMinValue, DEFAULT_MINIMUM),
+                        extractNumericValueFromAttributes(a, R.styleable.RangeSeekBar_absoluteMaxValue, DEFAULT_MAXIMUM));
+                mSingleThumb    = a.getBoolean(R.styleable.RangeSeekBar_singleThumb, false);
+                mShowLabels     = a.getBoolean(R.styleable.RangeSeekBar_showLabels, true);
+                mInternalPad    = a.getDimensionPixelSize(R.styleable.RangeSeekBar_internalPadding, INITIAL_PADDING_IN_DP);
+                lineHeight      = a.getDimensionPixelSize(R.styleable.RangeSeekBar_barHeight, LINE_HEIGHT_IN_DP);
+                mActiveColor    = a.getColor(R.styleable.RangeSeekBar_activeColor, ACTIVE_COLOR);
+                mDefaultColor   = a.getColor(R.styleable.RangeSeekBar_defaultColor, Color.GRAY);
+                mAlwaysActive   = a.getBoolean(R.styleable.RangeSeekBar_alwaysActive, false);
+            } finally {
+                a.recycle();
+            }
         }
 
         setValuePrimAndNumberType();
@@ -460,7 +474,7 @@ public class RangeSeekBar<T extends Number> extends ImageView {
 
         paint.setTextSize(mTextSize);
         paint.setStyle(Style.FILL);
-        paint.setColor(Color.GRAY);
+        paint.setColor(mDefaultColor);
         paint.setAntiAlias(true);
         float minMaxLabelSize = 0;
 
@@ -473,7 +487,7 @@ public class RangeSeekBar<T extends Number> extends ImageView {
             canvas.drawText(minLabel, 0, minMaxHeight, paint);
             canvas.drawText(maxLabel, getWidth() - minMaxLabelSize, minMaxHeight, paint);
         }
-        padding = INITIAL_PADDING + minMaxLabelSize + thumbHalfWidth;
+        padding = mInternalPad + minMaxLabelSize + thumbHalfWidth;
 
         // draw seek bar background line
         mRect.left = padding;
@@ -483,9 +497,9 @@ public class RangeSeekBar<T extends Number> extends ImageView {
         boolean selectedValuesAreDefault = (getSelectedMinValue().equals(getAbsoluteMinValue()) &&
                 getSelectedMaxValue().equals(getAbsoluteMaxValue()));
 
-        int colorToUseForButtonsAndHighlightedLine = selectedValuesAreDefault ?
-                Color.GRAY :    // default values
-                DEFAULT_COLOR; //non default, filter is active
+        int colorToUseForButtonsAndHighlightedLine = mAlwaysActive || selectedValuesAreDefault ?
+                mDefaultColor : // default values
+                mActiveColor;   // non default, filter is active
 
         // draw seek bar active range line
         mRect.left = normalizedToScreen(normalizedMinValue);

@@ -1,12 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <declare-styleable name="RangeSeekBar">
+        <!-- the minimum of the range -->
         <attr name="absoluteMinValue"   format="integer|float"/>
+
+        <!-- the maximum of the range -->
         <attr name="absoluteMaxValue"   format="integer|float"/>
+
+        <!-- show a single slider -->
         <attr name="singleThumb"        format="boolean"/>
+
+        <!-- show the labels on the right and left-->
         <attr name="showLabels"         format="boolean"/>
-        <attr name="internalPadding"    format="integer|reference"/>
-        <attr name="barHeight"          format="integer|reference"/>
+
+        <!-- always highlight the selected range (even for default values) the default is false -->
+        <attr name="alwaysHighlight"         format="boolean"/>
+
+        <!-- alwaysActive will make the buttons and bar always draw as the activeColor-->
+        <attr name="alwaysActive"       format="boolean"/>
+
+        <!-- padding on either side on the slider -->
+        <attr name="internalPadding"    format="dimension"/>
+
+        <!-- the height of the bar -->
+        <attr name="barHeight"          format="dimension"/>
+
+        <!-- the color of the bar that is not selected -->
+        <attr name="defaultColor"       format="color"/>
+
+        <!-- the color of the bar that is selected -->
+        <attr name="activeColor"        format="color"/>
     </declare-styleable>
 
 </resources>
