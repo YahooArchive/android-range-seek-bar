@@ -4,6 +4,7 @@
         <attr name="absoluteMinValue" format="integer|float"/>
         <attr name="absoluteMaxValue" format="integer|float"/>
         <attr name="singleThumb" format="boolean"/>
+        <attr name="showLabels" format="boolean"/>
     </declare-styleable>
 
 </resources>

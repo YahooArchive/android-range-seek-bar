@@ -18,8 +18,13 @@ package com.yahoo.mobile.client.android.util.rangeseekbar;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.graphics.*;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.Paint.Style;
+import android.graphics.RectF;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.util.AttributeSet;
@@ -102,6 +107,7 @@ public class RangeSeekBar<T extends Number> extends ImageView {
     private static final int DEFAULT_TEXT_DISTANCE_TO_BUTTON_IN_DP = 8;
     private static final int DEFAULT_TEXT_DISTANCE_TO_TOP_IN_DP = 8;
     private boolean mSingleThumb;
+    private boolean mShowLabels;
 
     public RangeSeekBar(Context context) {
         super(context);
@@ -141,6 +147,7 @@ public class RangeSeekBar<T extends Number> extends ImageView {
                     extractNumericValueFromAttributes(a, R.styleable.RangeSeekBar_absoluteMinValue, DEFAULT_MINIMUM),
                     extractNumericValueFromAttributes(a, R.styleable.RangeSeekBar_absoluteMaxValue, DEFAULT_MAXIMUM));
             mSingleThumb = a.getBoolean(R.styleable.RangeSeekBar_singleThumb, false);
+            mShowLabels = a.getBoolean(R.styleable.RangeSeekBar_showLabels, true);
             a.recycle();
         }
 
@@ -453,14 +460,17 @@ public class RangeSeekBar<T extends Number> extends ImageView {
         paint.setStyle(Style.FILL);
         paint.setColor(Color.GRAY);
         paint.setAntiAlias(true);
+        float minMaxLabelSize = 0;
 
-        // draw min and max labels
-        String minLabel = getContext().getString(R.string.demo_min_label);
-        String maxLabel = getContext().getString(R.string.demo_max_label);
-        float minMaxLabelSize = Math.max(paint.measureText(minLabel), paint.measureText(maxLabel));
-        float minMaxHeight = mTextOffset + thumbHalfHeight + mTextSize / 3;
-        canvas.drawText(minLabel, 0, minMaxHeight, paint);
-        canvas.drawText(maxLabel, getWidth() - minMaxLabelSize, minMaxHeight, paint);
+        if (mShowLabels) {
+            // draw min and max labels
+            String minLabel = getContext().getString(R.string.demo_min_label);
+            String maxLabel = getContext().getString(R.string.demo_max_label);
+            minMaxLabelSize = Math.max(paint.measureText(minLabel), paint.measureText(maxLabel));
+            float minMaxHeight = mTextOffset + thumbHalfHeight + mTextSize / 3;
+            canvas.drawText(minLabel, 0, minMaxHeight, paint);
+            canvas.drawText(maxLabel, getWidth() - minMaxLabelSize, minMaxHeight, paint);
+        }
         padding = INITIAL_PADDING + minMaxLabelSize + thumbHalfWidth;
 
         // draw seek bar background line
