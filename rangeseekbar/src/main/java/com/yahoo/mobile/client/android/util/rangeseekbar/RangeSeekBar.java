@@ -25,16 +25,17 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Style;
 import android.graphics.RectF;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.ViewConfiguration;
 import android.widget.ImageView;
 
+import com.yahoo.mobile.client.android.util.BitmapUtil;
 import com.yahoo.mobile.client.android.util.PixelUtil;
 
 import java.math.BigDecimal;
@@ -64,7 +65,7 @@ public class RangeSeekBar<T extends Number> extends ImageView {
 
     // Localized constants from MotionEvent for compatibility
     // with API < 8 "Froyo".
-    public static final int ACTION_POINTER_UP = 0x6, ACTION_POINTER_INDEX_MASK = 0x0000ff00, ACTION_POINTER_INDEX_SHIFT = 8;
+    public static final int ACTION_POINTER_INDEX_MASK = 0x0000ff00, ACTION_POINTER_INDEX_SHIFT = 8;
 
     public static final Integer DEFAULT_MINIMUM = 0;
     public static final Integer DEFAULT_MAXIMUM = 100;
@@ -76,14 +77,13 @@ public class RangeSeekBar<T extends Number> extends ImageView {
     private static final int DEFAULT_TEXT_DISTANCE_TO_BUTTON_IN_DP = 8;
     private static final int DEFAULT_TEXT_DISTANCE_TO_TOP_IN_DP = 8;
 
-    private final int LINE_HEIGHT_IN_DP = 1;
+    private static final int LINE_HEIGHT_IN_DP = 1;
     private final Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
 
     private Bitmap thumbImage;
     private Bitmap thumbPressedImage;
     private Bitmap thumbDisabledImage;
 
-    private float mThumbWidth;
     private float mThumbHalfWidth;
     private float mThumbHalfHeight;
 
@@ -132,6 +132,7 @@ public class RangeSeekBar<T extends Number> extends ImageView {
         init(context, attrs);
     }
 
+    @SuppressWarnings("unchecked")
     private T extractNumericValueFromAttributes(TypedArray a, int attribute, int defaultValue) {
         TypedValue tv = a.peekValue(attribute);
         if (tv == null) {
@@ -175,15 +176,15 @@ public class RangeSeekBar<T extends Number> extends ImageView {
                 mAlwaysActive   = a.getBoolean(R.styleable.RangeSeekBar_alwaysActive, false);
                 Drawable normalDrawable = a.getDrawable(R.styleable.RangeSeekBar_thumbNormal);
                 if (normalDrawable != null) {
-                    thumbImage = drawableToBitmap(normalDrawable);
+                    thumbImage = BitmapUtil.drawableToBitmap(normalDrawable);
                 }
                 Drawable disabledDrawable = a.getDrawable(R.styleable.RangeSeekBar_thumbDisabled);
                 if (disabledDrawable != null) {
-                    thumbDisabledImage = drawableToBitmap(disabledDrawable);
+                    thumbDisabledImage = BitmapUtil.drawableToBitmap(disabledDrawable);
                 }
                 Drawable pressedDrawable = a.getDrawable(R.styleable.RangeSeekBar_thumbPressed);
                 if (pressedDrawable != null) {
-                    thumbPressedImage = drawableToBitmap(pressedDrawable);
+                    thumbPressedImage = BitmapUtil.drawableToBitmap(pressedDrawable);
                 }
             } finally {
                 a.recycle();
@@ -200,8 +201,7 @@ public class RangeSeekBar<T extends Number> extends ImageView {
             thumbDisabledImage = BitmapFactory.decodeResource(getResources(), thumbDisabled);
         }
 
-        mThumbWidth = thumbImage.getWidth();
-        mThumbHalfWidth = 0.5f * mThumbWidth;
+        mThumbHalfWidth = 0.5f * thumbImage.getWidth();
         mThumbHalfHeight = 0.5f * thumbImage.getHeight();
 
         setValuePrimAndNumberType();
@@ -216,7 +216,7 @@ public class RangeSeekBar<T extends Number> extends ImageView {
                           getWidth() - padding,
                           mTextOffset + mThumbHalfHeight + barHeight / 2);
 
-        // make RangeSeekBar focusable. This solves focus handling issues in case EditText widgets are being used along with the RangeSeekBar within ScollViews.
+        // make RangeSeekBar focusable. This solves focus handling issues in case EditText widgets are being used along with the RangeSeekBar within ScrollViews.
         setFocusable(true);
         setFocusableInTouchMode(true);
         mScaledTouchSlop = ViewConfiguration.get(getContext()).getScaledTouchSlop();
@@ -242,20 +242,21 @@ public class RangeSeekBar<T extends Number> extends ImageView {
         numberType = NumberType.fromNumber(absoluteMinValue);
     }
 
+    @SuppressWarnings("unused")
     public void resetSelectedValues() {
         setSelectedMinValue(absoluteMinValue);
         setSelectedMaxValue(absoluteMaxValue);
     }
 
+    @SuppressWarnings("unused")
     public boolean isNotifyWhileDragging() {
         return notifyWhileDragging;
     }
 
     /**
      * Should the widget notify the listener callback while the user is still dragging a thumb? Default is false.
-     *
-     * @param flag
      */
+    @SuppressWarnings("unused")
     public void setNotifyWhileDragging(boolean flag) {
         this.notifyWhileDragging = flag;
     }
@@ -329,6 +330,7 @@ public class RangeSeekBar<T extends Number> extends ImageView {
      *
      * @param listener The listener to notify about changed selected values.
      */
+    @SuppressWarnings("unused")
     public void setOnRangeSeekBarChangeListener(OnRangeSeekBarChangeListener<T> listener) {
         this.listener = listener;
     }
@@ -337,7 +339,7 @@ public class RangeSeekBar<T extends Number> extends ImageView {
      * Handles thumb selection and movement. Notifies listener callback on certain events.
      */
     @Override
-    public boolean onTouchEvent(MotionEvent event) {
+    public boolean onTouchEvent(@NonNull MotionEvent event) {
 
         if (!isEnabled()) {
             return false;
@@ -434,7 +436,7 @@ public class RangeSeekBar<T extends Number> extends ImageView {
         return true;
     }
 
-    private final void onSecondaryPointerUp(MotionEvent ev) {
+    private void onSecondaryPointerUp(MotionEvent ev) {
         final int pointerIndex = (ev.getAction() & ACTION_POINTER_INDEX_MASK) >> ACTION_POINTER_INDEX_SHIFT;
 
         final int pointerId = ev.getPointerId(pointerIndex);
@@ -448,7 +450,7 @@ public class RangeSeekBar<T extends Number> extends ImageView {
         }
     }
 
-    private final void trackTouchEvent(MotionEvent event) {
+    private void trackTouchEvent(MotionEvent event) {
         final int pointerIndex = event.findPointerIndex(mActivePointerId);
         final float x = event.getX(pointerIndex);
 
@@ -503,7 +505,7 @@ public class RangeSeekBar<T extends Number> extends ImageView {
      * Draws the widget on the given canvas.
      */
     @Override
-    protected synchronized void onDraw(Canvas canvas) {
+    protected synchronized void onDraw(@NonNull Canvas canvas) {
         super.onDraw(canvas);
 
         paint.setTextSize(mTextSize);
@@ -677,9 +679,6 @@ public class RangeSeekBar<T extends Number> extends ImageView {
 
     /**
      * Converts a normalized value to a Number object in the value space between absolute minimum and maximum.
-     *
-     * @param normalized
-     * @return
      */
     @SuppressWarnings("unchecked")
     private T normalizedToValue(double normalized) {
@@ -729,29 +728,6 @@ public class RangeSeekBar<T extends Number> extends ImageView {
         }
     }
 
-    public static Bitmap drawableToBitmap(Drawable drawable) {
-        if (drawable instanceof BitmapDrawable) {
-            return ((BitmapDrawable) drawable).getBitmap();
-        }
-
-        // We ask for the bounds if they have been set as they would be most
-        // correct, then we check we are  > 0
-        final int width = !drawable.getBounds().isEmpty() ?
-                drawable.getBounds().width() : drawable.getIntrinsicWidth();
-
-        final int height = !drawable.getBounds().isEmpty() ?
-                drawable.getBounds().height() : drawable.getIntrinsicHeight();
-
-        // Now we check we are > 0
-        final Bitmap bitmap = Bitmap.createBitmap(width <= 0 ? 1 : width, height <= 0 ? 1 : height,
-                Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(bitmap);
-        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
-        drawable.draw(canvas);
-
-        return bitmap;
-    }
-
     /**
      * Callback listener interface to notify about changed range values.
      *
@@ -760,24 +736,22 @@ public class RangeSeekBar<T extends Number> extends ImageView {
      */
     public interface OnRangeSeekBarChangeListener<T> {
 
-        public void onRangeSeekBarValuesChanged(RangeSeekBar<?> bar, T minValue, T maxValue);
+        void onRangeSeekBarValuesChanged(RangeSeekBar<?> bar, T minValue, T maxValue);
     }
 
     /**
      * Thumb constants (min and max).
      */
-    private static enum Thumb {
+    private enum Thumb {
         MIN, MAX
     }
-
-    ;
 
     /**
      * Utility enumeration used to convert between Numbers and doubles.
      *
      * @author Stephan Tittel (stephan.tittel@kom.tu-darmstadt.de)
      */
-    private static enum NumberType {
+    private enum NumberType {
         LONG, DOUBLE, INTEGER, FLOAT, SHORT, BYTE, BIG_DECIMAL;
 
         public static <E extends Number> NumberType fromNumber(E value) throws IllegalArgumentException {
@@ -808,17 +782,17 @@ public class RangeSeekBar<T extends Number> extends ImageView {
         public Number toNumber(double value) {
             switch (this) {
                 case LONG:
-                    return Long.valueOf((long) value);
+                    return (long) value;
                 case DOUBLE:
                     return value;
                 case INTEGER:
-                    return Integer.valueOf((int) value);
+                    return (int) value;
                 case FLOAT:
-                    return Float.valueOf((float)value);
+                    return (float) value;
                 case SHORT:
-                    return Short.valueOf((short) value);
+                    return (short) value;
                 case BYTE:
-                    return Byte.valueOf((byte) value);
+                    return (byte) value;
                 case BIG_DECIMAL:
                     return BigDecimal.valueOf(value);
             }
