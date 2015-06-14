@@ -17,6 +17,9 @@
         <!-- alwaysActive will make the buttons and bar always draw as the activeColor (the default is false) -->
         <attr name="alwaysActive"       format="boolean"/>
 
+        <!-- show the currently selected value above each thumb (defaults to true) -->
+        <attr name="valuesAboveThumbs"  format="boolean"/>
+
         <!-- padding on either side on the slider -->
         <attr name="internalPadding"    format="dimension"/>
 
