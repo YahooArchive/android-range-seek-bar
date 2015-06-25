@@ -1,3 +1,14 @@
+# === PROJECT MOVED ===
+
+The home for this project has moved over to the following repository: https://github.com/anothem/android-range-seek-bar
+
+You can continue using this repo, but new pull requests and issues will *not* be looked at. For the most up to date and actively maintained version of this project, please head over to the new repository above.  
+
+Thank you.
+
+--Alex (@anothem)
+
+
 range-seek-bar
 ======================
 
