@@ -6,7 +6,7 @@ You can continue using this repo, but new pull requests and issues will *not* be
 
 Thank you.
 
---Alex (@anothem)
+--Alex
 
 
 range-seek-bar
