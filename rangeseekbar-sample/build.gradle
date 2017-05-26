@@ -7,7 +7,7 @@ repositories {
 
 android {
     compileSdkVersion 21
-    buildToolsVersion "25.0.1"
+    buildToolsVersion "20.0.0"
 
     defaultConfig {
         applicationId "com.yahoo.mobile.client.android.util.rangeseekbar"
