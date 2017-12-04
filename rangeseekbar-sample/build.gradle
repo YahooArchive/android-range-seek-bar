@@ -6,13 +6,16 @@ repositories {
 }
 
 android {
-    compileSdkVersion 21
-    buildToolsVersion "20.0.0"
+    compileSdkVersion 26
+    buildToolsVersion "27.0.1"
+    lintOptions {
+        abortOnError false
+    }
 
     defaultConfig {
         applicationId "com.yahoo.mobile.client.android.util.rangeseekbar"
         minSdkVersion 15
-        targetSdkVersion 21
+        targetSdkVersion 26
         versionCode 1
         versionName "1.0"
     }
@@ -26,6 +29,6 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.android.support:appcompat-v7:21.0.0'
+    compile 'com.android.support:appcompat-v7:27.0.1'
     compile 'com.yahoo.mobile.client.android.util.rangeseekbar:rangeseekbar-library:0.2.0-SNAPSHOT'
 }
