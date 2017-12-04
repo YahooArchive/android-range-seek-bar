@@ -16,6 +16,7 @@ limitations under the License.
 
 package com.yahoo.mobile.client.android.util.rangeseekbar;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
@@ -118,7 +119,13 @@ public class RangeSeekBar<T extends Number> extends ImageView {
 
   public RangeSeekBar(Context context, AttributeSet attrs, int defStyle) {
     super(context, attrs, defStyle);
+
     init(context, attrs);
+  }
+
+  @TargetApi(VERSION_CODES.LOLLIPOP)
+  RangeSeekBar(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes){
+    super(context,attrs,defStyleAttr ,defStyleRes);
   }
 
   private T extractNumericValueFromAttributes(TypedArray a, int attribute, int defaultValue) {
